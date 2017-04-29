@@ -96,7 +96,7 @@ shinyServer(function(input, output) {
   
   
   
-  # Begin Scatter Plots Tab -------------------------------------------------------
+  #------------------------------------------------------- Begin Scatter Plots Tab -------------------------------------------------------
   
   dataScatter <- eventReactive(input$clickScatter, {
     
@@ -113,7 +113,7 @@ shinyServer(function(input, output) {
   )
   })
   
-  # End Scatter Plots Tab -------------------------------------------------------
+  #------------------------------------------------------- End Scatter Plots Tab -------------------------------------------------------
   
   
   
@@ -122,7 +122,7 @@ shinyServer(function(input, output) {
   
   
   
-  # Begin Crosstabs, KPIs, Parameters Tab -------------------------------------------------------
+  #------------------------------------------------------- Begin Crosstabs, KPIs, Parameters Tab -------------------------------------------------------
   
   dataCross <- eventReactive(input$clickCross, {
     
@@ -139,7 +139,7 @@ shinyServer(function(input, output) {
   )
   })
   
-  # End Crosstabs, KPIs, Parameters Tab -------------------------------------------------------
+  #------------------------------------------------------- End Crosstabs, KPIs, Parameters Tab -------------------------------------------------------
   
   
   
@@ -149,7 +149,7 @@ shinyServer(function(input, output) {
   
   
   
-  # Begin Bar Charts and Table Calculations Tab -------------------------------------------------------
+  #------------------------------------------------------- Begin Bar Charts and Table Calculations Tab -------------------------------------------------------
   
   dataBar <- eventReactive(input$clickBar, {
     
@@ -166,7 +166,7 @@ shinyServer(function(input, output) {
   )
   })
   
-  # End Bar Charts and Table Calculations Tab -------------------------------------------------------
+  #------------------------------------------------------- End Bar Charts and Table Calculations Tab -------------------------------------------------------
   
   
   
