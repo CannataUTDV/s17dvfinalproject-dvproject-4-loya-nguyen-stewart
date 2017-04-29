@@ -1,26 +1,68 @@
-# data visualizxation shiny ui 
+# data visualization final project shiny ui 
 
 require(shiny)
 require(shinydashboard)
-require(leaflet)
 
 dashboardPage(
   dashboardHeader(
   ),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Barcharts and Table Calculations", tabName = "firsttab", icon = icon("dashboard"))
+      menuItem("Home", tabName = "home", icon = icon("bar-chart")),
+      menuItem("Box Plots", tabName = "box", icon = icon("bar-chart")),
+      menuItem("Histograms", tabName = "hist", icon = icon("bar-chart")),
+      menuItem("Scatter Plots", tabName = "scatter", icon = icon("bar-chart")),
+      menuItem("Crosstabs, KPIs, Parameters", tabName = "cross", icon = icon("bar-chart")),
+      menuItem("Bar Charts and Table Calculations", tabName = "bar", icon = icon("bar-chart"))
     )
   ),
   dashboardBody(
     tabItems(
-      
-      tabItem(tabName = "firsttab",
+      tabItem("Home", tabName = "home"
+      ),
+      tabItem("Box Plots", tabName = "box",
               tabsetPanel(
-                tabPanel("Median Income by Race", plotOutput("distPlot1")),
-                tabPanel("Median Income by Fleeing", plotOutput("distPlot2")),
-                tabPanel("Inequality Index for High Income Criminals", plotOutput("distPlot3"))
-                
+                tabPanel("Data",
+                         actionButton(inputId = "clickBox",  label = "To get data, click here"),
+                         hr(),
+                         DT::dataTableOutput("dataBox")
+                )
+              )
+      ),
+      tabItem("Histograms", tabName = "hist",
+              tabsetPanel(
+                tabPanel("Data",
+                         actionButton(inputId = "clickHis",  label = "To get data, click here"),
+                         hr(),
+                         DT::dataTableOutput("dataHis")
+                )
+              )
+      ),
+      tabItem("Scatter Plots", tabName = "scatter",
+              tabsetPanel(
+                tabPanel("Data",
+                         actionButton(inputId = "clickScatter",  label = "To get data, click here"),
+                         hr(),
+                         DT::dataTableOutput("dataScatter")
+                )
+              )
+      ),
+      tabItem("Crosstabs, KPIs, Parameters", tabName = "cross",
+              tabsetPanel(
+                tabPanel("Data",
+                         actionButton(inputId = "clickCross",  label = "To get data, click here"),
+                         hr(), 
+                         DT::dataTableOutput("dataCross")
+                )
+              )
+      ),
+      tabItem("Bar Charts and Table Calculations", tabName = "bar",
+              tabsetPanel(
+                tabPanel("Data",
+                         actionButton(inputId = "clickBar",  label = "To get data, click here"),
+                         hr(),
+                         DT::dataTableOutput("dataBar")
+                )
               )
       )
     )
