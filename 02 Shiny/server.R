@@ -15,8 +15,14 @@ connection <- data.world(token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwcm9kLXVzZXItY
 states <- query(connection,dataset="robin-stewart/s-17-dv-project-5", type="sql",
                           query="SELECT distinct `fatal-police-shootings-cleaned`.state
                                      FROM `fatal-police-shootings-cleaned.csv/fatal-police-shootings-cleaned`
-                                     order by 1"
-)
+                                     order by 1")
+
+tdf = query(connection,
+            dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
+            query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
+            from `USA_All_States` 
+            order by Median_Income 
+            limit 1000")
 
 stateSelectList <- as.list(states$state)
 
@@ -33,6 +39,8 @@ shinyServer(function(input, output) {
       from `USA_All_States` 
       order by Median_Income 
       limit 1000")
+    
+    
     
   })
   output$dataBox <- renderDataTable({DT::datatable(boxData(), rownames = FALSE,
