@@ -60,6 +60,9 @@ dashboardPage(
                 )
               )
       ),
+      
+#------------------------------------------------------- Begin Crosstabs, KPIs, Parameters Tab -------------------------------------------------------
+      
       tabItem("Crosstabs", tabName = "cross",
               tabsetPanel(
                 tabPanel("Data",
@@ -69,7 +72,54 @@ dashboardPage(
                 )
               )
       ),
-      tabItem("Bar Charts and Table Calculations", tabName = "bar",
+      tabItem("KPIs", tabName = "kpi",
+              tabsetPanel(
+                tabPanel("Data",
+                         actionButton(inputId = "clickKPIs",  label = "To get data, click here"),
+                         hr(), 
+                         DT::dataTableOutput("dataKPIs")
+                )
+              )
+      ),
+      tabItem("Calculated Fields", tabName = "calf",
+              tabsetPanel(
+                tabPanel("Data",
+                         actionButton(inputId = "clickCalF",  label = "To get data, click here"),
+                         hr(), 
+                         DT::dataTableOutput("dataCalF")
+                )
+              )
+      ),
+      tabItem("Sets", tabName = "sets",
+              tabsetPanel(
+                tabPanel("Data",
+                         actionButton(inputId = "clickSets",  label = "To get data, click here"),
+                         hr(), 
+                         DT::dataTableOutput("dataSets")
+                )
+              )
+      ),
+      tabItem("Parameters", tabName = "para",
+              tabsetPanel(
+                tabPanel("Data",
+                         actionButton(inputId = "clickPara",  label = "To get data, click here"),
+                         hr(), 
+                         DT::dataTableOutput("dataPara")
+                )
+              )
+      ),
+      
+#------------------------------------------------------- End Crosstabs, KPIs, Sets, Parameters Tab -------------------------------------------------------
+      
+
+
+
+
+
+
+#------------------------------------------------------- Begin Bar Charts and Table Calculations Tab -------------------------------------------------------
+
+      tabItem("Bar Charts", tabName = "bar",
               tabsetPanel(
                 tabPanel("Data",
                          actionButton(inputId = "clickBar",  label = "To get data, click here"),
@@ -77,7 +127,37 @@ dashboardPage(
                          DT::dataTableOutput("dataBar")
                 )
               )
+      ),
+      tabItem("Table Calculations", tabName = "tableCal",
+              tabsetPanel(
+                tabPanel("Data",
+                         actionButton(inputId = "clickTabCal",  label = "To get data, click here"),
+                         hr(), 
+                         DT::dataTableOutput("dataTabCal")
+                )
+              )
+      ),
+      tabItem("Reference Line", tabName = "refLine",
+              tabsetPanel(
+                tabPanel("Data",
+                         actionButton(inputId = "clickRefLine",  label = "To get data, click here"),
+                         hr(), 
+                         DT::dataTableOutput("dataRefLine")
+                )
+              )
+      ),
+      tabItem("ID Sets", tabName = "idSet",
+              tabsetPanel(
+                tabPanel("Data",
+                         actionButton(inputId = "clickIdSet",  label = "To get data, click here"),
+                         hr(), 
+                         DT::dataTableOutput("dataIdSet")
+                )
+              )
       )
+
+#------------------------------------------------------- End Bar Charts and Table Calculations Tab -------------------------------------------------------
+
     )
   )
 )
