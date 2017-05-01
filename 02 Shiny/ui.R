@@ -134,7 +134,8 @@ dashboardPage(
                          actionButton(inputId = "clickTabCal",  label = "To get data, click here"),
                          hr(), 
                          DT::dataTableOutput("dataTabCal")
-                )
+                ),
+                tabPanel("Plot", plotOutput("tabCalPlot", height=800))
               )
       ),
       tabItem("Reference Line", tabName = "refLine",
@@ -143,7 +144,8 @@ dashboardPage(
                          actionButton(inputId = "clickRefLine",  label = "To get data, click here"),
                          hr(), 
                          DT::dataTableOutput("dataRefLine")
-                )
+                ),
+                tabPanel("Plot", plotOutput("refLinePlot", height=1000))
               )
       ),
       tabItem("ID Sets", tabName = "idSet",
@@ -152,7 +154,8 @@ dashboardPage(
                          actionButton(inputId = "clickIdSet",  label = "To get data, click here"),
                          hr(), 
                          DT::dataTableOutput("dataIdSet")
-                )
+                ),
+                tabPanel("Plot", plotOutput("idSetPlot", height=800))
               )
       )
 
@@ -161,3 +164,10 @@ dashboardPage(
     )
   )
 )
+
+
+
+
+
+
+

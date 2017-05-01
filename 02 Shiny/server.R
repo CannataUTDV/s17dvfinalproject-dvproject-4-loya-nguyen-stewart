@@ -12,20 +12,27 @@ require(plotly)
 
 connection <- data.world(token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwcm9kLXVzZXItY2xpZW50OmV4c29yZXN0IiwiaXNzIjoiYWdlbnQ6ZXhzb3Jlc3Q6OmY5ODk0YTlhLWZkNjAtNDI2NC04YTk3LTlhYjUwOWYzODZiZSIsImlhdCI6MTQ4NDY5NzMzNiwicm9sZSI6WyJ1c2VyX2FwaV93cml0ZSIsInVzZXJfYXBpX3JlYWQiXSwiZ2VuZXJhbC1wdXJwb3NlIjp0cnVlfQ.WLINQ3z7bGjvYCmpDR3Fvl3LZ4fFDLBDCngivFE3nfoF1EgGQQ0WCxZElC2bxC3YUoUiYEJ6hz8rxVW3yHoecg")
 
-states <- query(connection,dataset="robin-stewart/s-17-dv-project-5", type="sql",
-                          query="SELECT distinct `fatal-police-shootings-cleaned`.state
-                                     FROM `fatal-police-shootings-cleaned.csv/fatal-police-shootings-cleaned`
-                                     order by 1")
-
-tdf = query(connection,
-            dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
-            query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-            from `USA_All_States` 
-            order by Median_Income 
-            limit 1000")
+states <- query(connection,dataset="robin-stewart/s-17-dv-project-6", type="sql",
+                query="SELECT distinct `fatal-police-shootings-cleaned`.state
+                FROM `fatal-police-shootings-cleaned.csv/fatal-police-shootings-cleaned`
+                order by 1"
+)
 
 stateSelectList <- as.list(states$state)
 
+income <- query(connection,
+                dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
+                query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
+                from `USA_All_States` 
+                order by Median_Income 
+                limit 1000")
+
+fatalPoliceShootings <- query(connection,
+                              dataset="robin-stewart/s-17-dv-final-project", type="sql",
+                              query="SELECT * FROM `fatal-police-shootings-cleaned.csv/fatal-police-shootings-cleaned` LIMIT 1000"
+)
+
+incomeOfTheFatallyShot <- dplyr::inner_join(income,fatalPoliceShootings, by = c("State" = "state"))
 
 shinyServer(function(input, output) {
   
@@ -36,11 +43,9 @@ shinyServer(function(input, output) {
     tdf = query(connection,
                 dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
                 query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-      from `USA_All_States` 
-      order by Median_Income 
-      limit 1000")
-    
-    
+                from `USA_All_States` 
+                order by Median_Income 
+                limit 1000")
     
   })
   output$dataBox <- renderDataTable({DT::datatable(boxData(), rownames = FALSE,
@@ -49,22 +54,22 @@ shinyServer(function(input, output) {
   })
   
   # ------------------------------------------------------- End Box Plots Tab -------------------------------------------------------
-
+  
   
   #------------------------------------------------------- Begin Histogram Tab -------------------------------------------------------
   
   histogramData <- eventReactive(input$clickHis, {
-
+    
     tdf = query(connection,
-      dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
-      query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-      from `USA_All_States` 
-      order by Median_Income 
-      limit 1000")
+                dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
+                query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
+                from `USA_All_States` 
+                order by Median_Income 
+                limit 1000")
     
   })
   output$dataHis <- renderDataTable({DT::datatable(histogramData(), rownames = FALSE,
-                                                 extensions = list(Responsive = TRUE, FixedHeader = TRUE)
+                                                   extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
   
@@ -85,9 +90,9 @@ shinyServer(function(input, output) {
     tdf = query(connection,
                 dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
                 query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-      from `USA_All_States` 
-      order by Median_Income 
-      limit 1000")
+                from `USA_All_States` 
+                order by Median_Income 
+                limit 1000")
     
   })
   output$dataBox <- renderDataTable({DT::datatable(boxData(), rownames = FALSE,
@@ -98,7 +103,7 @@ shinyServer(function(input, output) {
   #------------------------------------------------------- End Box Plots Tab -------------------------------------------------------
   
   
-
+  
   
   
   
@@ -111,13 +116,13 @@ shinyServer(function(input, output) {
     tdf = query(connection,
                 dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
                 query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-      from `USA_All_States` 
-      order by Median_Income 
-      limit 1000")
+                from `USA_All_States` 
+                order by Median_Income 
+                limit 1000")
     
   })
   output$dataScatter <- renderDataTable({DT::datatable(dataScatter(), rownames = FALSE,
-                                                   extensions = list(Responsive = TRUE, FixedHeader = TRUE)
+                                                       extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
   
@@ -137,13 +142,13 @@ shinyServer(function(input, output) {
     tdf = query(connection,
                 dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
                 query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-      from `USA_All_States` 
-      order by Median_Income 
-      limit 1000")
+                from `USA_All_States` 
+                order by Median_Income 
+                limit 1000")
     
   })
   output$dataCross <- renderDataTable({DT::datatable(dataCross(), rownames = FALSE,
-                                                       extensions = list(Responsive = TRUE, FixedHeader = TRUE)
+                                                     extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
   
@@ -159,7 +164,7 @@ shinyServer(function(input, output) {
     
   })
   output$dataKPIs <- renderDataTable({DT::datatable(dataKPIs(), rownames = FALSE,
-                                                     extensions = list(Responsive = TRUE, FixedHeader = TRUE)
+                                                    extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
   
@@ -226,64 +231,90 @@ shinyServer(function(input, output) {
     tdf = query(connection,
                 dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
                 query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-      from `USA_All_States` 
-      order by Median_Income 
-      limit 1000")
+                from `USA_All_States` 
+                order by Median_Income 
+                limit 1000")
     
   })
   output$dataBar <- renderDataTable({DT::datatable(dataBar(), rownames = FALSE,
-                                                       extensions = list(Responsive = TRUE, FixedHeader = TRUE)
+                                                   extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
   
   dataTabCal <- eventReactive(input$clickTabCal, {
     
-    tdf = query(connection,
-                dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
-                query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-                from `USA_All_States` 
-                order by Median_Income 
-                limit 1000")
+    incomeByRace <- incomeOfTheFatallyShot %>% dplyr::group_by(race, gender) %>% dplyr::summarize(avg_median_income = mean(Median_Income), sum_income = sum(Median_Income)) %>% dplyr::group_by(race, gender, avg_median_income) %>% dplyr::summarize(window_avg_income = mean(sum_income))
     
   })
+  
   output$dataTabCal <- renderDataTable({DT::datatable(dataTabCal(), rownames = FALSE,
-                                                    extensions = list(Responsive = TRUE, FixedHeader = TRUE)
+                                                      extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
+  })
+  
+  output$tabCalPlot <- renderPlot({
+    
+    escapePlot <- as.data.frame(dataTabCal())
+    
+    ggplot(escapePlot, aes(x = gender, y = avg_median_income)) + 
+      geom_bar(stat = "identity") +
+      scale_y_continuous(labels = scales::comma) + 
+      facet_wrap(~race, ncol=1) +
+      coord_flip() +
+      geom_text(mapping=aes(x=gender, y=avg_median_income, label=round(avg_median_income - window_avg_income)),colour="blue", hjust=-.5)
+    
   })
   
   dataRefLine <- eventReactive(input$clickRefLine, {
     
-    tdf = query(connection,
-                dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
-                query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-                from `USA_All_States` 
-                order by Median_Income 
-                limit 1000")
+    fleeMentalIncome <- incomeOfTheFatallyShot %>% dplyr::select(flee,signs_of_mental_illness,Median_Income) %>% group_by(signs_of_mental_illness,flee) %>% dplyr::filter(flee %in% c('Car','Foot','Not fleeing')) %>% summarise(Median_income = median(Median_Income))
+    
+    
     
   })
   output$dataRefLine <- renderDataTable({DT::datatable(dataRefLine(), rownames = FALSE,
-                                                    extensions = list(Responsive = TRUE, FixedHeader = TRUE)
+                                                       extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
+  })
+  
+  output$refLinePlot <- renderPlot({
+    
+    escapePlot <- as.data.frame(dataRefLine())
+    
+    ggplot(escapePlot, aes(x=signs_of_mental_illness, y=Median_income, fill=signs_of_mental_illness)) +
+      theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5)) + 
+      theme(axis.text.y=element_text(size=12, hjust=0.5)) + 
+      geom_bar(stat = "identity") + 
+      facet_wrap(~flee, ncol=1) + 
+      coord_flip() + 
+      geom_hline(aes(yintercept = median(Median_income)), color="purple")
+    
   })
   
   dataIdSet <- eventReactive(input$clickIdSet, {
     
-    tdf = query(connection,
-                dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
-                query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-                from `USA_All_States` 
-                order by Median_Income 
-                limit 1000")
+    inequalityIndexforHighIncome <- incomeOfTheFatallyShot %>% dplyr::select(id,GINI,Median_Income) %>% mutate(Median_Income_Range = ifelse(Median_Income < 50000, "low", ifelse(Median_Income < 60000 & Median_Income > 50000, "medium","high"))) %>% dplyr::filter(Median_Income_Range == 'high',id > 1000) 
     
   })
   output$dataIdSet <- renderDataTable({DT::datatable(dataIdSet(), rownames = FALSE,
-                                                    extensions = list(Responsive = TRUE, FixedHeader = TRUE)
+                                                     extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
+  })
+  
+  output$idSetPlot <- renderPlot({
+    
+    escapePlot <- as.data.frame(dataIdSet())
+    
+    ggplot(escapePlot, aes(x=id, y=GINI, fill=Median_Income)) +
+      theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5)) + 
+      theme(axis.text.y=element_text(size=12, hjust=0.5)) +
+      geom_bar(stat = "identity")
+    
   })
   
   #------------------------------------------------------- End Bar Charts and Table Calculations Tab -------------------------------------------------------
   
   
   
-    
+  
 })
