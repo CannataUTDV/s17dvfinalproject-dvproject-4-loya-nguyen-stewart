@@ -154,65 +154,66 @@ shinyServer(function(input, output) {
   
   
   dataKPIs <- eventReactive(input$clickKPIs, {
-    
-    tdf = query(connection,
-                dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
-                query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-                from `USA_All_States` 
-                order by Median_Income 
-                limit 1000")
-    
+    genderMentalIll <- dplyr::select(incomeOfTheFatallyShot, Per_Capita_Income, gender, signs_of_mental_illness)
+    countTotal <- genderMentalIll %>% mutate(Per_Capita_Range = ifelse(Per_Capita_Income < 26500, "low", ifelse(Per_Capita_Income < 31000 & Per_Capita_Income > 26500, "medium","high"))) %>% count(Per_Capita_Range,gender, signs_of_mental_illness)
   })
   output$dataKPIs <- renderDataTable({DT::datatable(dataKPIs(), rownames = FALSE,
                                                     extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
-  
-  dataCalF <- eventReactive(input$clickCalF, {
+  output$KPIPlot <- renderPlot({
+    countTotal <- as.data.frame(dataKPIs())
     
-    tdf = query(connection,
-                dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
-                query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-                from `USA_All_States` 
-                order by Median_Income 
-                limit 1000")
+    lowCapitaRange <- countTotal %>% filter(Per_Capita_Range == "low")
+    mediumCapitaRange <- countTotal %>% filter(Per_Capita_Range == "medium")
+    highCapitaRange <- countTotal %>% filter(Per_Capita_Range == "high")
+    ggplot() + 
+      geom_text(data = lowCapitaRange, aes(x=gender, y=signs_of_mental_illness, label = n),nudge_x = -0.2, size=6) + 
+      geom_text(data = mediumCapitaRange, aes(x=gender, y=signs_of_mental_illness, label = n),nudge_x = 0, size=6) + 
+      geom_text(data = highCapitaRange, aes(x=gender, y=signs_of_mental_illness, label = n),nudge_x = 0.2, size=6) 
     
-  })
-  output$dataCalF <- renderDataTable({DT::datatable(dataCalF(), rownames = FALSE,
-                                                    extensions = list(Responsive = TRUE, FixedHeader = TRUE)
-  )
   })
   
   dataSets <- eventReactive(input$clickSets, {
-    
-    tdf = query(connection,
-                dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
-                query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-                from `USA_All_States` 
-                order by Median_Income 
-                limit 1000")
+    incomeOfTheFatallyShot %>% 
+      dplyr::group_by(gender, race) %>% 
+      dplyr::summarize(avg_median_income = mean(Median_Income))
     
   })
   output$dataSets <- renderDataTable({DT::datatable(dataSets(), rownames = FALSE,
                                                     extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
-  
-  dataPara <- eventReactive(input$clickPara, {
+  output$setPlot <- renderPlot({
+    escapePlot <- as.data.frame(dataSets())
+    subset <- dplyr::inner_join(income,fatalPoliceShootings, by = c("State" = "state")) %>% dplyr::filter(Median_Income >= 46000 & Median_Income <= 62000) %>%
+      dplyr::group_by(gender, race) %>% 
+      dplyr::summarize(avg_median_income = mean(Median_Income)) 
+    ggplot() + 
+      geom_text(data = escapePlot, aes(x= gender, y=race, label = avg_median_income), size=10) + 
+      geom_text(data = subset, aes(x=gender, y=race, label = avg_median_income), nudge_y = -.5, size=4)
     
-    tdf = query(connection,
-                dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
-                query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-                from `USA_All_States` 
-                order by Median_Income 
-                limit 1000")
+  })
+  dataPara <- eventReactive(input$clickPara, {
+    paraData <- incomeOfTheFatallyShot %>% dplyr::group_by(race,flee) %>% dplyr::summarise(income = median(Median_Income), MedianFamilyIncomePerCapitaIncomeRatio = median(Median_Family_Income/Per_Capita_Income))
+
     
   })
   output$dataPara <- renderDataTable({DT::datatable(dataPara(), rownames = FALSE,
                                                     extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
-  
+  output$paraPlot <- renderPlot({
+    
+    escapePlot <- as.data.frame(dataPara())
+    
+    ggplot(escapePlot) + 
+      theme(axis.text.x=element_text(angle=90, size=16, vjust=0.5)) + 
+      theme(axis.text.y=element_text(size=16, hjust=0.5)) +
+      geom_text(aes(x=race, y=flee, label = income), size=6)+
+      geom_tile(aes(x=race, y=flee, fill=MedianFamilyIncomePerCapitaIncomeRatio), alpha=0.50)
+    
+  })
   
   #------------------------------------------------------- End Crosstabs, KPIs, Sets, Parameters Tab -------------------------------------------------------
   

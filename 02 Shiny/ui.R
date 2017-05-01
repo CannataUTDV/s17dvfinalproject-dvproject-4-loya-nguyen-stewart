@@ -18,9 +18,8 @@ dashboardPage(
       menuItem("Scatter Plot", tabName = "scatter", icon = icon("bar-chart")),
       menuItem("Crosstabs", tabName = "cross", icon = icon("bar-chart"),
         menuSubItem("KPIs", tabName = "kpi", icon = icon("check")),
-        menuSubItem("Calculated Fields", tabName = "calf", icon = icon("check")),
         menuSubItem("Sets", tabName = "sets", icon = icon("check")),
-        menuSubItem("Parameters", tabName = "para", icon = icon("check"))
+        menuSubItem("Parameters/Calculated Fields", tabName = "para", icon = icon("check"))
         ),
       menuItem("Bar Charts", tabName = "bar", icon = icon("bar-chart"),
         menuSubItem("Table Calculations", tabName = "tableCal", icon = icon("check")),
@@ -78,16 +77,8 @@ dashboardPage(
                          actionButton(inputId = "clickKPIs",  label = "To get data, click here"),
                          hr(), 
                          DT::dataTableOutput("dataKPIs")
-                )
-              )
-      ),
-      tabItem("Calculated Fields", tabName = "calf",
-              tabsetPanel(
-                tabPanel("Data",
-                         actionButton(inputId = "clickCalF",  label = "To get data, click here"),
-                         hr(), 
-                         DT::dataTableOutput("dataCalF")
-                )
+                ),
+                tabPanel("Plot", plotOutput("KPIPlot", height=800))
               )
       ),
       tabItem("Sets", tabName = "sets",
@@ -96,16 +87,18 @@ dashboardPage(
                          actionButton(inputId = "clickSets",  label = "To get data, click here"),
                          hr(), 
                          DT::dataTableOutput("dataSets")
-                )
+                ),
+                tabPanel("Plot", plotOutput("setPlot", height=800))
               )
       ),
-      tabItem("Parameters", tabName = "para",
+      tabItem("Parameters/Calculated Fields", tabName = "para",
               tabsetPanel(
                 tabPanel("Data",
                          actionButton(inputId = "clickPara",  label = "To get data, click here"),
                          hr(), 
                          DT::dataTableOutput("dataPara")
-                )
+                ),
+                tabPanel("Plot", plotOutput("paraPlot", height=800))
               )
       ),
       
