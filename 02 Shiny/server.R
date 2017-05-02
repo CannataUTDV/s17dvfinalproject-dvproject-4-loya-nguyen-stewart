@@ -37,24 +37,6 @@ incomeOfTheFatallyShot <- dplyr::inner_join(income,fatalPoliceShootings, by = c(
 
 shinyServer(function(input, output) {
   
-  # ------------------------------------------------------- Begin Box Plots Tab -------------------------------------------------------
-  
-  boxData <- eventReactive(input$clickBox, {
-    
-    tdf = query(connection,
-                dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
-                query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-                from `USA_All_States` 
-                order by Median_Income 
-                limit 1000")
-    
-  })
-  output$dataBox <- renderDataTable({DT::datatable(boxData(), rownames = FALSE,
-                                                   extensions = list(Responsive = TRUE, FixedHeader = TRUE)
-  )
-  })
-  
-  # ------------------------------------------------------- End Box Plots Tab -------------------------------------------------------
   
   
   #------------------------------------------------------- Begin Histogram Tab -------------------------------------------------------
