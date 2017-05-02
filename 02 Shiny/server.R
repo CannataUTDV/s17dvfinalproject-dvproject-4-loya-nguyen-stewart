@@ -88,19 +88,20 @@ shinyServer(function(input, output) {
   
   boxData <- eventReactive(input$clickBox, {
     
-    tdf = query(connection,
-                dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
-                query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-                from `USA_All_States` 
-                order by Median_Income 
-                limit 1000")
+    boxDataSet <- incomeOfTheFatallyShot
     
   })
   output$dataBox <- renderDataTable({DT::datatable(boxData(), rownames = FALSE,
                                                    extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
-  
+  output$plotBox <- renderPlot({
+    countTotal <- as.data.frame(boxData())
+    
+    ggplot(incomeOfTheFatallyShot) + 
+      geom_boxplot(aes(x = flee, y = Median_Family_Income, fill = flee)  )
+    
+  })
   #------------------------------------------------------- End Box Plots Tab -------------------------------------------------------
   
   
@@ -126,6 +127,7 @@ shinyServer(function(input, output) {
                                                        extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
+  
   
   #------------------------------------------------------- End Scatter Plots Tab -------------------------------------------------------
   
