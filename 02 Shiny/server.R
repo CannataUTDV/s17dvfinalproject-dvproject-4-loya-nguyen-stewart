@@ -115,19 +115,18 @@ shinyServer(function(input, output) {
   
   dataScatter <- eventReactive(input$clickScatter, {
     
-    tdf = query(connection,
-                dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
-                query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-                from `USA_All_States` 
-                order by Median_Income 
-                limit 1000")
+   scatters <- incomeOfTheFatallyShot
     
   })
   output$dataScatter <- renderDataTable({DT::datatable(dataScatter(), rownames = FALSE,
                                                        extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
-  
+
+  output$scatterPlot <- renderPlot({
+    df <- as.data.frame(dataScatter())
+    ggplot(df) + geom_point(aes(x = GINI, y = Median_Family_Income, color = armed))
+  })
   
   #------------------------------------------------------- End Scatter Plots Tab -------------------------------------------------------
   
