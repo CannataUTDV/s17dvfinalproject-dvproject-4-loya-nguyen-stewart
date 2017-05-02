@@ -88,7 +88,7 @@ shinyServer(function(input, output) {
   
   boxData <- eventReactive(input$clickBox, {
     
-    boxDataSet <- incomeOfTheFatallyShot
+    boxDataSet <- incomeOfTheFatallyShot %>% dplyr::select(flee, Median_Family_Income)
     
   })
   output$dataBox <- renderDataTable({DT::datatable(boxData(), rownames = FALSE,
@@ -98,7 +98,7 @@ shinyServer(function(input, output) {
   output$plotBox <- renderPlot({
     countTotal <- as.data.frame(boxData())
     
-    ggplot(incomeOfTheFatallyShot) + 
+    ggplot(countTotal) + 
       geom_boxplot(aes(x = flee, y = Median_Family_Income, fill = flee)  )
     
   })
@@ -115,7 +115,7 @@ shinyServer(function(input, output) {
   
   dataScatter <- eventReactive(input$clickScatter, {
     
-   scatters <- incomeOfTheFatallyShot
+   scatters <- incomeOfTheFatallyShot %>% dplyr::select(GINI, Median_Family_Income, armed)
     
   })
   output$dataScatter <- renderDataTable({DT::datatable(dataScatter(), rownames = FALSE,
