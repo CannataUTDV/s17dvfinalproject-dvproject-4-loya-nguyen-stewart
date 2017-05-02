@@ -38,7 +38,8 @@ dashboardPage(
                          actionButton(inputId = "clickBox",  label = "To get data, click here"),
                          hr(),
                          DT::dataTableOutput("dataBox")
-                )
+                ),
+                tabPanel("Plot", plotOutput("plotBox", height=800))
               )
       ),
       tabItem("Histogram", tabName = "hist",
