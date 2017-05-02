@@ -123,11 +123,19 @@ shinyServer(function(input, output) {
   )
   })
 
-  output$scatterPlot <- renderPlot({
+  output$scatterPlot1 <- renderPlot({
     df <- as.data.frame(dataScatter())
     ggplot(df) + geom_point(aes(x = GINI, y = Median_Family_Income, color = armed))
   })
-  
+  output$scatterPlot2 <- renderPlot({
+    df <- as.data.frame(dataScatter())
+    brush = brushOpts(id="plot_brush", delayType = "throttle", delay = 30)
+    bdf=brushedPoints(df, input$plot_brush)
+    
+    if( !is.null(input$plot_brush) ) {
+      df %>% dplyr::filter(df$GINI %in% bdf[, "GINI"]) %>% ggplot() + geom_point(aes(x = GINI, y = Median_Family_Income, color = armed)) 
+    } 
+  })
   #------------------------------------------------------- End Scatter Plots Tab -------------------------------------------------------
   
   
