@@ -37,24 +37,6 @@ incomeOfTheFatallyShot <- dplyr::inner_join(income,fatalPoliceShootings, by = c(
 
 shinyServer(function(input, output) {
   
-  # ------------------------------------------------------- Begin Box Plots Tab -------------------------------------------------------
-  
-  boxData <- eventReactive(input$clickBox, {
-    
-    tdf = query(connection,
-                dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
-                query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-                from `USA_All_States` 
-                order by Median_Income 
-                limit 1000")
-    
-  })
-  output$dataBox <- renderDataTable({DT::datatable(boxData(), rownames = FALSE,
-                                                   extensions = list(Responsive = TRUE, FixedHeader = TRUE)
-  )
-  })
-  
-  # ------------------------------------------------------- End Box Plots Tab -------------------------------------------------------
   
   
   #------------------------------------------------------- Begin Histogram Tab -------------------------------------------------------
@@ -88,7 +70,7 @@ shinyServer(function(input, output) {
   
   boxData <- eventReactive(input$clickBox, {
     
-    boxDataSet <- incomeOfTheFatallyShot
+    boxDataSet <- incomeOfTheFatallyShot %>% dplyr::select(flee, Median_Family_Income)
     
   })
   output$dataBox <- renderDataTable({DT::datatable(boxData(), rownames = FALSE,
@@ -98,7 +80,7 @@ shinyServer(function(input, output) {
   output$plotBox <- renderPlot({
     countTotal <- as.data.frame(boxData())
     
-    ggplot(incomeOfTheFatallyShot) + 
+    ggplot(countTotal) + 
       geom_boxplot(aes(x = flee, y = Median_Family_Income, fill = flee)  )
     
   })
@@ -115,20 +97,27 @@ shinyServer(function(input, output) {
   
   dataScatter <- eventReactive(input$clickScatter, {
     
-    tdf = query(connection,
-                dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
-                query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-                from `USA_All_States` 
-                order by Median_Income 
-                limit 1000")
+   scatters <- incomeOfTheFatallyShot %>% dplyr::select(GINI, Median_Family_Income, armed)
     
   })
   output$dataScatter <- renderDataTable({DT::datatable(dataScatter(), rownames = FALSE,
                                                        extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
-  
-  
+
+  output$scatterPlot1 <- renderPlot({
+    df <- as.data.frame(dataScatter())
+    ggplot(df) + geom_point(aes(x = GINI, y = Median_Family_Income, color = armed))
+  })
+  output$scatterPlot2 <- renderPlot({
+    df <- as.data.frame(dataScatter())
+    brush = brushOpts(id="plot_brush", delayType = "throttle", delay = 30)
+    bdf=brushedPoints(df, input$plot_brush)
+    
+    if( !is.null(input$plot_brush) ) {
+      df %>% dplyr::filter(df$GINI %in% bdf[, "GINI"]) %>% ggplot() + geom_point(aes(x = GINI, y = Median_Family_Income, color = armed)) 
+    } 
+  })
   #------------------------------------------------------- End Scatter Plots Tab -------------------------------------------------------
   
   

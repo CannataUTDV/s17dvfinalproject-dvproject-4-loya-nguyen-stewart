@@ -57,7 +57,16 @@ dashboardPage(
                          actionButton(inputId = "clickScatter",  label = "To get data, click here"),
                          hr(),
                          DT::dataTableOutput("dataScatter")
-                )
+                ),
+                tabPanel("Plot", 
+                         plotOutput("scatterPlot1",
+                                    height=800,
+                                    click = "plot_click",
+                                    dblclick = "plot_dblclick",
+                                    hover = "plot_hover",
+                                    brush = "plot_brush"
+                         ),
+                         plotOutput("scatterPlot2", height=800))
               )
       ),
       
