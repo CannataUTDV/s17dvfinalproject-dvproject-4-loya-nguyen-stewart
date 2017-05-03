@@ -2,10 +2,27 @@ require(ggplot2)
 require(dplyr)
 
 
-income <- read.csv(file="../01 Data/income.csv", header=TRUE, sep=",")
-fatalPoliceShootings <- read.csv(file="../01 Data/fatalPoliceShootings.csv", header=TRUE, sep=",")
-incomeOfTheFatallyShot <- read.csv(file="../01 Data/incomeOfTheFatallyShot.csv", header=TRUE, sep=",")
+income <- read.csv(file="../01 Data/census-income-data.csv", header=TRUE, sep=",")
+fatalPoliceShootings <- read.csv(file="../01 Data/fatal-police-shootings-data.csv", header=TRUE, sep=",")
+incomeOfTheFatallyShot <- read.csv(file="../01 Data/fatal-police-shootings-and-census-income-data.csv", header=TRUE, sep=",")
 
+#Histogram-----------------------------------------------------------------------------
+
+histogram <- ggplot(incomeOfTheFatallyShot) + geom_histogram(aes(Per_Capita_Income, fill = Per_Capita_Income  ))
+#End Histogram-----------------------------------------------------------------------------
+
+#Box Plot-----------------------------------------------------------------------------
+
+boxplot <- ggplot(incomeOfTheFatallyShot) + geom_boxplot(aes(x = flee, y = Median_Family_Income, fill = flee)  )
+#End Box Plot-----------------------------------------------------------------------------
+
+#Scatter Plot-----------------------------------------------------------------------------
+scatterplot <- ggplot(incomeOfTheFatallyShot) + geom_point(aes(x = GINI, y = Median_Family_Income, color = armed))
+
+#End Scatter Plot-----------------------------------------------------------------------------
+
+
+#CrossTabs-----------------------------------------------------------------------------
 # First Plot
 
 genderMentalIll <- dplyr::select(incomeOfTheFatallyShot, Per_Capita_Income, gender, signs_of_mental_illness)
@@ -47,6 +64,10 @@ raceFleePlot <- ggplot(test) +
   geom_text(aes(x=race, y=flee, label = income), size=6)+
   geom_tile(aes(x=race, y=flee, fill=MedianFamilyIncomePerCapitaIncomeRatio), alpha=0.50)
 
+#End CrossTabs-----------------------------------------------------------------------------
+
+#BarCharts -----------------------------------------------------------------------------
+
 # Median Income by Race
 
 incomeByRace <- incomeOfTheFatallyShot %>% dplyr::group_by(race, gender) %>% dplyr::summarize(avg_median_income = mean(Median_Income), sum_income = sum(Median_Income)) %>% dplyr::group_by(race, gender, avg_median_income) %>% dplyr::summarize(window_avg_income = mean(sum_income))
@@ -83,6 +104,8 @@ inequalityPlot <- ggplot(inequalityIndexforHighIncome, aes(x=id, y=GINI, fill=Me
   theme(axis.text.y=element_text(size=12, hjust=0.5)) +
   geom_bar(stat = "identity")
 plot(inequalityPlot)
+
+#End Barcharts-----------------------------------------------------------------------------
 
 
 

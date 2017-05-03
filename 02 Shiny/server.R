@@ -37,31 +37,24 @@ incomeOfTheFatallyShot <- dplyr::inner_join(income,fatalPoliceShootings, by = c(
 
 shinyServer(function(input, output) {
   
-  
-  
   #------------------------------------------------------- Begin Histogram Tab -------------------------------------------------------
   
   histogramData <- eventReactive(input$clickHis, {
     
-    tdf = query(connection,
-                dataset="uscensusbureau/acs-2015-5-e-income", type="sql",
-                query="select State, B19083_001 as GINI, B19301_001 as Per_Capita_Income, B19113_001 as Median_Family_Income, B19202_001 as Median_Non_Family_Income, B19019_001 as Median_Income
-                from `USA_All_States` 
-                order by Median_Income 
-                limit 1000")
-    
+    histo <- incomeOfTheFatallyShot
   })
   output$dataHis <- renderDataTable({DT::datatable(histogramData(), rownames = FALSE,
                                                    extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
-  
+  output$Histogram <- renderPlot({
+    countTotal <- as.data.frame(histogramData())
+    
+    ggplot(countTotal) + 
+      geom_histogram(aes(Per_Capita_Income, fill = Per_Capita_Income  ))
+    
+  })
   #------------------------------------------------------- End Histogram Tab -------------------------------------------------------
-  
-  
-  
-  
-  
   
   
   
@@ -86,11 +79,7 @@ shinyServer(function(input, output) {
   })
   #------------------------------------------------------- End Box Plots Tab -------------------------------------------------------
   
-  
-  
-  
-  
-  
+
   
   
   #------------------------------------------------------- Begin Scatter Plots Tab -------------------------------------------------------
@@ -121,10 +110,7 @@ shinyServer(function(input, output) {
   #------------------------------------------------------- End Scatter Plots Tab -------------------------------------------------------
   
   
-  
-  
-  
-  
+
   
   
   #------------------------------------------------------- Begin Crosstabs, KPIs, Parameters Tab -------------------------------------------------------
@@ -209,11 +195,7 @@ shinyServer(function(input, output) {
   
   #------------------------------------------------------- End Crosstabs, KPIs, Sets, Parameters Tab -------------------------------------------------------
   
-  
-  
-  
-  
-  
+
   
   
   
@@ -306,8 +288,6 @@ shinyServer(function(input, output) {
   })
   
   #------------------------------------------------------- End Bar Charts and Table Calculations Tab -------------------------------------------------------
-  
-  
   
   
 })
