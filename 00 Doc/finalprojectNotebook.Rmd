@@ -1,5 +1,5 @@
 ---
-title: "<center><b>Fatal Police Shootings Since 2015: Now with Census Data! </b></center>"
+title: '<center><b>Fatal Police Shootings Since 2015: Now with Census Data! </b></center>'
 author: "<center><b>Carlos Loya, Tolan Nguyen, Robin Stewart</b></center>"
 output:
   html_document:
@@ -28,6 +28,9 @@ Below we display our sessionInfo() for replication purposes.
 sessionInfo(package=NULL)
 ```
 
+```{r,include=FALSE}
+  source('../01 Data/finalplots.R')
+```
 #**Obtaining The Data Set**
 
 The data set was originally found on data.world, uploaded by a user named carlvlewis who claims that the data set is updated daily. For the purpose of this study we used the latest verison of the data that was available.
@@ -44,7 +47,7 @@ To obtain a copy of this data follow the following steps.
 The following is a summary of the cleaned data set:
 
 ```{r}
-summary(fatalPoliceShootings)
+  summary(fatalPoliceShootings)
 ```  
 
 #**Census Data**
@@ -69,39 +72,8 @@ The columns of GINI, Per_Capita_Income, Median_Family_Income, and Median_Non_Fam
 
 
 #**ETL Data Cleaning**
-
-```{r include=FALSE}
-  source('../01 Data/ETLDataCleanUp.R')
-```  
-
-
-
-
-```{r include=FALSE}
-  source('../01 Data/finalplots.R')
-``` 
-#**Non-Aggregated Measures Analysis**
-
-![Box Plot]()
-
-```{r}
-  plot()
-```  
-
-
-#**Aggregated Measures Analysis**
-
-#**Scatter Plot**
-
-
-#**Cross Tabs**
-
-
-#**Bar Charts**
-
-
-
-
+```{r, code = readLines("../01 Data/ETLDataCleanUp.R"), eval=FALSE}
+```
 
 
 
@@ -111,20 +83,17 @@ The columns of GINI, Per_Capita_Income, Median_Family_Income, and Median_Non_Fam
 
 To create interesting visualizations, we must first understand what the combined data means. The columns that were queried from data.world were GINI, Per_Capita_Income, Median_Family_Income, and Median_Non_Family_Income. These are state-level summaries, meaning that each fatal shootings has per capita income, median family income, median non-family income information based on the state in which the shooting took place. Although this mixes individualized data with general data, it sheds some light into the type of environment and socioeconomic context the shooting took place.
 
-![Gender vs. Signs of Mental Illness](../03 Visualizations/Gender vs. Signs of Mental Illness - Parameters.png)
-
-This is a graph of gender of the individual shot vs if that individual showed signs of mental illness. The graph was then colored based on whether that particular individual was shot in area which had high/medium/low per capita income. 
 
 
 
 
+#**Non-Aggregated Measures Analysis**
 
+![Box Plot](../03 Visualizations/Boxplot.png)
 
-
-
-![Race vs. Gender](../03 Visualizations/Race vs. Gender - Using a Set.png)
-
-This graph shows the race of the individual shot against the individual's gender. Each cell has the median income colored by race. A set was created by filtering those individuals that were shot in a state who median family income was between 46,000 and 62,000. 
+```{r}
+  plot(boxplot)
+```  
 
 
 
@@ -135,17 +104,15 @@ This graph shows the race of the individual shot against the individual's gender
 
 
 
-![Fleeing vs Race](../03 Visualizations/FleeingbyRaceAndFamilydivPerCapitaIncome.png)
+#**Aggregated Measures Analysis**
 
-This last Tablaeu visualization was created using the calculated fields of Median(MedianFamilyIncome/PerCapitaIncome) and plotting based on how the individual fled against the race of the individual shot.
+![Histogram](../03 Visualizations/Histogram.png)
 
+![Histogram](../03 Visualizations/Histogram - Action.png)
 
-
-
-
-
-![Median Income of Race Broken up by Gender](../03 Visualizations/Median Income of Race Broken up by Gender.png)
-The Median Income of Race Broken up by Gender is shown above. This combines both our data set and the census data set through the variables of race, gender and Median Income respectively. Mutliple rows are used used to break down the race into genders for each field. A calculated table parameter is used specifically the avg_median_income - window_avg_income. This parameter is the color in addition to the text and helps show that the males have relatively high numbers for this parameter even though they may have relatively low avg_median_income on it's own compared to the females. 
+```{r}
+  plot(histogram)
+```  
 
 
 
@@ -153,28 +120,35 @@ The Median Income of Race Broken up by Gender is shown above. This combines both
 
 
 
-![Median Income by Fleeing](../03 Visualizations/incomeoffleeingbymental.png)
-
-
-This is a barhart depicting income of how people are fleeing, separated by signs of mental illness. The line shows the average of median incomes by mental illness and feeling type.
 
 
 
 
+#**Scatter Plots**
+
+![Map](../03 Visualizations/Map.png)
+
+![Scatter Plot](../03 Visualizations/Scatter Plot.png)
+![Scatter Plot](../03 Visualizations/Scatter Plot - Action.png)
+
+![Dashboard](../03 Visualizations/Dashboard.png)
+
+![Dashboard](../03 Visualizations/Trend Model.png)
+
+
+```{r}
+  plot(scatterplot)
+```  
 
 
 
-![Inequality Index for High Income Criminals](../03 Visualizations/InequalityIndexForHighIncomeCriminals.png)
-
-
-This barchart shows the GINI inequality index of the area criminals are from, using ID-sets to separate high income criminals.
 
 
 
 
-The following are visualizations created using ggplot2 and dplyr in R Studio. They are based off of the above Tablaeu graphs. 
+#**Cross Tabs**
 
-
+![KPI](../03 Visualizations/KPI.png)
 
 ```{r}
   plot(capitaRangePlot)
@@ -183,70 +157,56 @@ This is a graph of gender of the individual shot against if that individual show
 
 
 
-
-
-
-
+![Set](../03 Visualizations/Crosstab and Set.png)
+This graph shows the race of the individual shot against the individual's gender. Each cell has the median income colored by race. A set was created by filtering those individuals that were shot in a state who median family income was between 46,000 and 62,000. 
 
 
 
 ```{r}
   plot(genderRacePlot)
-```  
-
+```
 This graph shows the race of the individual shot against the individual's gender. A set was created by using the dplyr filter function to separate those individuals that were shot in a state who's state had a median family income was between 46,000 and 62,000. 
 
 
 
-
-
-
-
-
+![Parameter](../03 Visualizations/Parameter.png)
+This is a graph of gender of the individual shot vs if that individual showed signs of mental illness. The graph was then colored based on whether that particular individual was shot in area which had high/medium/low per capita income. 
 
 ```{r}
   plot(raceFleePlot)
-```  
+```
 This R visualization was created using the calculated fields of Median(MedianFamilyIncome/PerCapitaIncome) and plotting based on how the individual fled against the race of the individual shot. 
 
 
 
+
+
+
+
+
+
+#**Bar Charts**
+
+![Table Calculations](../03 Visualizations/Barchart and Table Calculation.png)
+The Median Income of Race Broken up by Gender is shown above. This combines both our data set and the census data set through the variables of race, gender and Median Income respectively. Mutliple rows are used used to break down the race into genders for each field. A calculated table parameter is used specifically the avg_median_income - window_avg_income. This parameter is the color in addition to the text and helps show that the males have relatively high numbers for this parameter even though they may have relatively low avg_median_income on it's own compared to the females. 
+
+
 ```{r}
   plot(incomeByRacePlot)
-```  
+```
 
-The Median Income of Race Broken up by Gender is shown above, specifically the R version. This combines both our data set and the census data set through the variables of race, gender and Median Income respectively. A facet is used to break down the race into genders for each field. A calculated table parameter is used specifically the avg_median_income - window_avg_income. This parameter text helps show that the males have relatively high numbers for this parameter even though they may have relatively low avg_median_income on it's own compared to the females. The numbers are slightly different due to limits on the SQL statement so the process does not take to long to pull the data.  
-
-
+The Median Income of Race Broken up by Gender is shown above, specifically the R version. This combines both our data set and the census data set through the variables of race, gender and Median Income respectively. A facet is used to break down the race into genders for each field. A calculated table parameter is used specifically the avg_median_income - window_avg_income. This parameter text helps show that the males have relatively high numbers for this parameter even though they may have relatively low avg_median_income on it's own compared to the females. The numbers are slightly different due to limits on the SQL statement so the process does not take to long to pull the data. 
 
 
 
 
-
-
-```{r}
-  plot(fleePlot)
-```  
-This is a barhart depicting income of how people are fleeing, separated by signs of mental illness. The line shows the average of median incomes by mental illness and feeling type.
-
-
-
-
-
-
-
-
-
+![ID Sets](../03 Visualizations/ID Sets.png)
 
 ```{r}
   plot(inequalityPlot)
-```  
+```
 
 This barchart shows the GINI inequality index of the area criminals are from, using ID-sets to separate high income criminals.
-
-
-
-
 
 
 

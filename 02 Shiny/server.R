@@ -133,7 +133,7 @@ shinyServer(function(input, output) {
   
   dataKPIs <- eventReactive(input$clickKPIs, {
     genderMentalIll <- dplyr::select(incomeOfTheFatallyShot, Per_Capita_Income, gender, signs_of_mental_illness)
-    countTotal <- genderMentalIll %>% mutate(Per_Capita_Range = ifelse(Per_Capita_Income < 26500, "low", ifelse(Per_Capita_Income < 31000 & Per_Capita_Income > 26500, "medium","high"))) %>% count(Per_Capita_Range,gender, signs_of_mental_illness)
+    countTotal <- genderMentalIll %>% mutate(Per_Capita_Range = ifelse(Per_Capita_Income < 26500, "low", ifelse(Per_Capita_Income < 31000 & Per_Capita_Income > 26500, "medium","high"))) %>% dplyr::count(Per_Capita_Range,gender, signs_of_mental_illness)
   })
   output$dataKPIs <- renderDataTable({DT::datatable(dataKPIs(), rownames = FALSE,
                                                     extensions = list(Responsive = TRUE, FixedHeader = TRUE)
