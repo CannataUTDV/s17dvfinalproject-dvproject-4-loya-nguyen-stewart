@@ -30,7 +30,9 @@ dashboardPage(
   ),
   dashboardBody(
     tabItems(
-      tabItem("Home", tabName = "home"
+      tabItem("Home", tabName = "home",
+            h1("Robin Stewart, Carloys Loya, and Tolan Nguyen",
+               h2("CS 329E Data Visualization"))
       ),
       tabItem("Box Plot", tabName = "box",
               tabsetPanel(
@@ -48,7 +50,8 @@ dashboardPage(
                          actionButton(inputId = "clickHis",  label = "To get data, click here"),
                          hr(),
                          DT::dataTableOutput("dataHis")
-                )
+                ),
+                tabPanel("Plot", plotOutput("Histogram", height=800))
               )
       ),
       tabItem("Scatter Plot", tabName = "scatter",
