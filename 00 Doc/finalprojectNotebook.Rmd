@@ -52,6 +52,9 @@ The following is a summary of the cleaned data set:
 ```  
 
 ##**ETL Data Cleaning**
+
+The following is the code we used to clean the data. Specifically we used the ETL to remove the victim's names, change the name of the state column from lowercase characters to uppercase. Then we changed specific values to be more descriptive. For example, we changed individual's race from one letter (eg, 'H') to the full word (eg, 'Hispanic'). This was done for our convience to be able to indentify race quicker. The same thing was done to the gender column, switching 'F' and 'M' to 'Female' and 'Male' respectively. Finally, we begin to parse through the dimensions of the data frame to remove symbols that would could case errors later when using the actual data.
+
 ```{r, code = readLines("../01 Data/ETLDataCleanUp.R"), eval=FALSE}
 ```
 
