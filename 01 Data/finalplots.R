@@ -27,7 +27,7 @@ scatterplot <- ggplot(incomeOfTheFatallyShot) + geom_point(aes(x = GINI, y = Med
 
 genderMentalIll <- dplyr::select(incomeOfTheFatallyShot, Per_Capita_Income, gender, signs_of_mental_illness)
 
-countTotal <- genderMentalIll %>% mutate(Per_Capita_Range = ifelse(Per_Capita_Income < 26500, "low", ifelse(Per_Capita_Income < 31000 & Per_Capita_Income > 26500, "medium","high"))) %>% count(Per_Capita_Range,gender, signs_of_mental_illness)
+countTotal <- genderMentalIll %>% mutate(Per_Capita_Range = ifelse(Per_Capita_Income < 26500, "low", ifelse(Per_Capita_Income < 31000 & Per_Capita_Income > 26500, "medium","high"))) %>% dplyr::count(Per_Capita_Range, gender, signs_of_mental_illness)
 
 
 lowCapitaRange <- countTotal %>% filter(Per_Capita_Range == "low")
@@ -78,7 +78,7 @@ incomeByRacePlot <- ggplot(incomeByRace, aes(x = gender, y = avg_median_income))
   facet_wrap(~race, ncol=1) +
   coord_flip() +
   geom_text(mapping=aes(x=gender, y=avg_median_income, label=round(avg_median_income - window_avg_income)),colour="blue", hjust=-.5)
-plot(incomeByRacePlot)
+#plot(incomeByRacePlot)
 
 # Median Income by Fleeing
 
@@ -92,7 +92,7 @@ fleePlot <- ggplot(fleeMentalIncome, aes(x=signs_of_mental_illness, y=Median_inc
   facet_wrap(~flee, ncol=1) + 
   coord_flip() + 
   geom_hline(aes(yintercept = median(Median_income)), color="purple")
-plot(fleePlot)
+#plot(fleePlot)
 
 
 # Inequality Index for High Income Criminals
@@ -103,23 +103,22 @@ inequalityPlot <- ggplot(inequalityIndexforHighIncome, aes(x=id, y=GINI, fill=Me
   theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5)) + 
   theme(axis.text.y=element_text(size=12, hjust=0.5)) +
   geom_bar(stat = "identity")
-plot(inequalityPlot)
+#plot(inequalityPlot)
 
 #End Barcharts-----------------------------------------------------------------------------
 
 
-
-require("grid")
-
-setwd("../03 Visualizations")
-
-png("allPlots.png", width = 45, height = 45, units = "in", res = 120)
-grid.newpage()
-pushViewport(viewport(layout = grid.layout(2, 2)))   
-
-# Print Plots
-print(incomeByRacePlot, vp = viewport(layout.pos.row = 1, layout.pos.col = 1))  
-print(fleePlot, vp = viewport(layout.pos.row = 1, layout.pos.col = 2))
-print(inequalityPlot, vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
-
-dev.off()
+# require("grid")
+# 
+# setwd("../03 Visualizations")
+# 
+# png("allPlots.png", width = 45, height = 45, units = "in", res = 120)
+# grid.newpage()
+# pushViewport(viewport(layout = grid.layout(2, 2)))   
+# 
+# # Print Plots
+# print(incomeByRacePlot, vp = viewport(layout.pos.row = 1, layout.pos.col = 1))  
+# print(fleePlot, vp = viewport(layout.pos.row = 1, layout.pos.col = 2))
+# print(inequalityPlot, vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
+# 
+# dev.off()

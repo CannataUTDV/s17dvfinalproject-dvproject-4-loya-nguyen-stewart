@@ -10,7 +10,6 @@ output:
 
 ```{r setup, include=FALSE}
 sessionInfo()
-source('../01 Data/finalplots.R')
 knitr::opts_chunk$set(echo=TRUE)
 ```
 
@@ -37,7 +36,7 @@ The data that was originally obtained was raw and contained private information 
 
 To obtain a copy of this data follow the following steps.
 
-1. Copy and paste the following link into your prefered web browser: https://data.world/robin-stewart/s-17-dv-project-6
+1. Copy and paste the following link into your prefered web browser: https://data.world/robin-stewart/s-17-dv-final-project
     i. At the top-right section of your screen is a blue download button, that when clicked will download a zip file of the data set.
     ii. Alternatively, scroll down to see a sample of the csv dataset. Click on the download button located to the right of the Explore button to download a csv file of the data set.
 
@@ -67,7 +66,48 @@ summary(incomeOfTheFatallyShot)
 The columns of GINI, Per_Capita_Income, Median_Family_Income, and Median_Non_Family_Income were added from the census data and matched on state of the individual shot. This dataset was saved as a CSV for later use in Tablaeu and R Markdown.
 
 
-#**Tablaeu Visualizations**
+
+
+#**ETL Data Cleaning**
+
+```{r include=FALSE}
+  source('../01 Data/ETLDataCleanUp.R')
+```  
+
+
+
+
+```{r include=FALSE}
+  source('../01 Data/finalplots.R')
+``` 
+#**Non-Aggregated Measures Analysis**
+
+![Box Plot]()
+
+```{r}
+  plot()
+```  
+
+
+#**Aggregated Measures Analysis**
+
+#**Scatter Plot**
+
+
+#**Cross Tabs**
+
+
+#**Bar Charts**
+
+
+
+
+
+
+
+
+
+
 
 To create interesting visualizations, we must first understand what the combined data means. The columns that were queried from data.world were GINI, Per_Capita_Income, Median_Family_Income, and Median_Non_Family_Income. These are state-level summaries, meaning that each fatal shootings has per capita income, median family income, median non-family income information based on the state in which the shooting took place. Although this mixes individualized data with general data, it sheds some light into the type of environment and socioeconomic context the shooting took place.
 
@@ -131,8 +171,6 @@ This barchart shows the GINI inequality index of the area criminals are from, us
 
 
 
-
-#**R Visualizations**
 
 The following are visualizations created using ggplot2 and dplyr in R Studio. They are based off of the above Tablaeu graphs. 
 
@@ -214,6 +252,6 @@ This barchart shows the GINI inequality index of the area criminals are from, us
 
 #**R Shiny**
 All R visualizations were graphed on crosstabs in R Shiny. Each graph in each of the different tabs.
-Here is a link to the published shiny application: https://carlosloya.shinyapps.io/dvproject6shinyapplication/
+Here is a link to the published shiny application: https://robin-stewart.shinyapps.io/final_project/
 
 ![Online Shiny Application](../03 Visualizations/shinyOnlineApp.png)
