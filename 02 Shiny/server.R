@@ -51,7 +51,8 @@ shinyServer(function(input, output) {
     countTotal <- as.data.frame(histogramData())
     
     ggplot(countTotal) + 
-      geom_histogram(aes(Per_Capita_Income, fill = Per_Capita_Income  ))
+      geom_histogram(aes(Per_Capita_Income, fill = Per_Capita_Income), binwidth = 700) + 
+      ggtitle("Count of the per capita of Fatal Police Shooting Individuals")
     
   })
   #------------------------------------------------------- End Histogram Tab -------------------------------------------------------
@@ -73,8 +74,7 @@ shinyServer(function(input, output) {
   output$plotBox <- renderPlot({
     countTotal <- as.data.frame(boxData())
     
-    ggplot(countTotal) + 
-      geom_boxplot(aes(x = flee, y = Median_Family_Income, fill = flee)  )
+    ggplot(countTotal) + geom_boxplot(aes(x = flee, y = Median_Family_Income, fill = flee)  ) + ggtitle("Median Family Income Boxplot of Individuals who suffered from \nFatal Police Shootings in 2015. \n\nThe x axis is the fleeing type, i.e. if anyone was fleeing and if so how.")
     
   })
   #------------------------------------------------------- End Box Plots Tab -------------------------------------------------------
@@ -96,7 +96,7 @@ shinyServer(function(input, output) {
 
   output$scatterPlot1 <- renderPlot({
     df <- as.data.frame(dataScatter())
-    ggplot(df) + geom_point(aes(x = GINI, y = Median_Family_Income, color = armed))
+    ggplot(df) + geom_point(aes(x = GINI, y = Median_Family_Income, color = armed))  + ggtitle("This plot shows the median family income vs. the gini index for individuals \nfrom fatal police shootings in 2015. \n\nThe color is the weapon said individuals were armed with.")
   })
   output$scatterPlot2 <- renderPlot({
     df <- as.data.frame(dataScatter())
@@ -146,9 +146,9 @@ shinyServer(function(input, output) {
     mediumCapitaRange <- countTotal %>% filter(Per_Capita_Range == "medium")
     highCapitaRange <- countTotal %>% filter(Per_Capita_Range == "high")
     ggplot() + 
-      geom_text(data = lowCapitaRange, aes(x=gender, y=signs_of_mental_illness, label = n),nudge_x = -0.2, size=6) + 
-      geom_text(data = mediumCapitaRange, aes(x=gender, y=signs_of_mental_illness, label = n),nudge_x = 0, size=6) + 
-      geom_text(data = highCapitaRange, aes(x=gender, y=signs_of_mental_illness, label = n),nudge_x = 0.2, size=6) 
+      geom_text(data = lowCapitaRange, colour="#CC0000", aes(x=gender, y=signs_of_mental_illness, label = n),nudge_x = -0.2, size=10) + 
+      geom_text(data = mediumCapitaRange, colour="000099", aes(x=gender, y=signs_of_mental_illness, label = n),nudge_x = 0, size=10) + 
+      geom_text(data = highCapitaRange, colour="blue", aes(x=gender, y=signs_of_mental_illness, label = n),nudge_x = 0.2, size=10)  + ggtitle("This plot shows the signs of mental illness vs. gender for individuals \nfrom fatal police shootings in 2015. \n\nThe text is ranges of count of per capita income for the individuals in \neach category. Red is the low per capita income, green is the middle \nand blue is the high.") 
     
   })
   
@@ -168,8 +168,8 @@ shinyServer(function(input, output) {
       dplyr::group_by(gender, race) %>% 
       dplyr::summarize(avg_median_income = mean(Median_Income)) 
     ggplot() + 
-      geom_text(data = escapePlot, aes(x= gender, y=race, label = avg_median_income), size=10) + 
-      geom_text(data = subset, aes(x=gender, y=race, label = avg_median_income), nudge_y = -.5, size=4)
+      geom_text(data = escapePlot, aes(x= gender, y=race, label = avg_median_income), size=8) + 
+      geom_text(data = subset, aes(x=gender, y=race, label = avg_median_income), nudge_y = -.5, size=4)   + ggtitle("This plot shows the race vs. gender for individuals \nfrom fatal police shootings in 2015. \n\nThe large text Represents being Part of the mean of the top 25% \nHighest Median Incomes. Smaller text is the average of all \nremaining median incomes.")
     
   })
   dataPara <- eventReactive(input$clickPara, {
@@ -189,7 +189,7 @@ shinyServer(function(input, output) {
       theme(axis.text.x=element_text(angle=90, size=16, vjust=0.5)) + 
       theme(axis.text.y=element_text(size=16, hjust=0.5)) +
       geom_text(aes(x=race, y=flee, label = income), size=6)+
-      geom_tile(aes(x=race, y=flee, fill=MedianFamilyIncomePerCapitaIncomeRatio), alpha=0.50)
+      geom_tile(aes(x=race, y=flee, fill=MedianFamilyIncomePerCapitaIncomeRatio), alpha=0.50)  + ggtitle("This R visualization was created using the calculated fields of \nMedian(MedianFamilyIncome/PerCapitaIncome) and \nplotting based on how the individual from the fatal police \nshooting fled against the race of the individual shot.")
     
   })
   
@@ -236,7 +236,7 @@ shinyServer(function(input, output) {
       scale_y_continuous(labels = scales::comma) + 
       facet_wrap(~race, ncol=1) +
       coord_flip() +
-      geom_text(mapping=aes(x=gender, y=avg_median_income, label=round(avg_median_income - window_avg_income)),colour="blue", hjust=-.5)
+      geom_text(mapping=aes(x=gender, y=avg_median_income, label=round(avg_median_income - window_avg_income)),colour="blue", hjust=-.5) + ggtitle("This plot shows the race vs. gender for individuals \nfrom fatal police shootings in 2015 the bars are the \naverage median income. \n\nThe blue numbers are a table calculation (the sum of the median \nincome - the window average of the median income).")
     
   })
   
@@ -262,7 +262,7 @@ shinyServer(function(input, output) {
       geom_bar(stat = "identity") + 
       facet_wrap(~flee, ncol=1) + 
       coord_flip() + 
-      geom_hline(aes(yintercept = median(Median_income)), color="purple")
+      geom_hline(aes(yintercept = median(Median_income)), color="purple")  + ggtitle("Income of Individuals from a Fatal Police Shooting. \nBroken up by if they were feeling and/or had signs of mental illness.")
     
   })
   
@@ -283,7 +283,8 @@ shinyServer(function(input, output) {
     ggplot(escapePlot, aes(x=id, y=GINI, fill=Median_Income)) +
       theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5)) + 
       theme(axis.text.y=element_text(size=12, hjust=0.5)) +
-      geom_bar(stat = "identity")
+      geom_bar(stat = "identity")  + ggtitle("Inequality Index For High Income Individuals from 2015 Fatal Police \nShootings. Each ID represents a person.")
+    plot(inequalityPlot)
     
   })
   
